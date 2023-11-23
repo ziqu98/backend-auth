@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const users = require('./users');
@@ -56,8 +58,13 @@ const userLogin = async (request, h) => {
     try {
         if (await bcrypt.compare(password, user.password)) {
 
+            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+
             const response = h.response({
                 message: 'Success',
+                data: {
+                    accessToken: accessToken,
+                }
             });
 
             return response;
